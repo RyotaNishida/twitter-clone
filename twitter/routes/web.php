@@ -20,3 +20,6 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/home', [App\Http\Controllers\HomeController::class, 'index']);
+Route::get('/tweet', [App\Http\Controllers\TweetController::class, 'tweet']);
+Route::post('/tweet', [App\Http\Controllers\TweetController::class, 'postTweet']);
