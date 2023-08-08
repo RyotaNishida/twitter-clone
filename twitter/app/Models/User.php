@@ -41,4 +41,40 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * ユーザーIDに一致する情報を取得
+     *
+     * @param string $userId
+     * @return User
+     */
+    public function findByUserId(string $userId): User
+    {
+        return User::find($userId);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @param array $options
+     * @return void
+     */
+    public function userUpdate(array $data)
+    {
+        $this->name = $data['name'];
+        $this->email = $data['email'];
+        $this->save();
+    }
+
+    public function userDelete($userId)
+    {
+        return User::findOrFail($userId);
+    }
+
+    public function getAll()
+    {
+        return User::all();
+    }
+
 }
