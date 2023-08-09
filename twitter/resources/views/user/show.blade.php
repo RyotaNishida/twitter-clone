@@ -11,7 +11,7 @@
     <li>メールアドレス：{{ $userDetail->email }}</li>
   </ul>
 
-  <form action="{{ route('users.update', ['id' => $userDetail->id]) }}" method="POST">
+  <form action="{{ route('user.update', ['id' => $userDetail->id]) }}" method="POST">
     @csrf
     @method('PUT')
     <ul>
@@ -23,6 +23,15 @@
         <label for="user-name">メールアドレス</label>
         <input value={{ $userDetail->email }} name='email'>
       </li>
+      @if($errors->any())
+        <div>
+          <ul>
+            @forEach($errors->all() as $error)
+              <li>{{ $error }}</li>
+            @endforeach
+          </ul>
+        </div>
+      @endif
     </ul>
 
     <button type="submit" class="btn btn-primary">
@@ -30,7 +39,7 @@
     </button>
   </form>
 
-  <form action="{{ route('users.delete', ['id' => $userDetail->id]) }}" method="POST">
+  <form action="{{ route('user.delete', ['id' => $userDetail->id]) }}" method="POST">
     @csrf
     @method('DELETE')
 
