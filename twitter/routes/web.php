@@ -20,7 +20,11 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/users', [App\Http\Controllers\UserController::class, 'getAll'])->name('users.getall');
-Route::get('/users/{id}', [App\Http\Controllers\UserController::class, 'findByUserId'])->name('users.show');
-Route::put('/users/{id}', [App\Http\Controllers\UserController::class, 'userUpdate'])->name('users.update');
-Route::delete('/users/{id}', [App\Http\Controllers\UserController::class, 'userDelete'])->name('users.delete');
+Route::group(['middleware' => 'auth'], function() {
+    Route::group(['prefix' => 'user', 'as' => 'user.'], function() {
+        Route::get('/', [App\Http\Controllers\UserController::class, 'getAll'])->name('index');
+        Route::get('/{id}', [App\Http\Controllers\UserController::class, 'show'])->name('show');
+        Route::put('/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('update');
+        Route::delete('/{id}', [App\Http\Controllers\UserController::class, 'delete'])->name('delete');
+    });
+});
