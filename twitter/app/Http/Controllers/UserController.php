@@ -20,7 +20,7 @@ class UserController extends Controller
     public function findByUserId(int $userId, User $user): User
     {
         //ログイン中のIDを取得
-        if(Auth::id() !== (int) $userId) {
+        if(Auth::id() !== $userId) {
             return redirect()->route('home');
         }
         return $user->findByUserId($userId);
@@ -39,7 +39,6 @@ class UserController extends Controller
         $userDetail = $this->findByUserId($userId, $user);
         return view('user.show', ['userDetail' => $userDetail]);
     }
-
 
     /**
      * ユーザー情報の更新
