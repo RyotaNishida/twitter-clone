@@ -54,10 +54,9 @@ class User extends Authenticatable
     }
 
     /**
-     * Undocumented function
+     * ユーザー情報の更新内容を保存
      *
-     * @param array $attributes
-     * @param array $options
+     * @param array $data
      * @return void
      */
     public function userUpdate(array $data)
