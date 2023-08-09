@@ -31,9 +31,9 @@
                             {{ Auth::user()->name }}
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <a  class="dropdown-item"  href="{{ route('users.show', Auth::id()) }}">ユーザー詳細</a>
+                            <a  class="dropdown-item"  href="{{ route('user.show', Auth::id()) }}">ユーザー詳細</a>
 
-                            <a  class="dropdown-item"  href="{{ route('users.getall') }}">ユーザー一覧</a>
+                            <a  class="dropdown-item"  href="{{ route('user.index') }}">ユーザー一覧</a>
 
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
