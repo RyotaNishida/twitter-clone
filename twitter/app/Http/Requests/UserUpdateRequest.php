@@ -28,6 +28,11 @@ class UserUpdateRequest extends FormRequest
         ];
     }
 
+    /**
+     * エラーメッセージ
+     *
+     * @return void
+     */
     public function messages()
     {
         return [
