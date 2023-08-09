@@ -59,11 +59,7 @@ class User extends Authenticatable
     }
 
     /**
-<<<<<<< Updated upstream
      * ユーザー情報の更新内容を保存
-=======
-     * ユーザー情報の更新
->>>>>>> Stashed changes
      *
      * @param array $data
      * @return void
@@ -76,13 +72,18 @@ class User extends Authenticatable
     }
 
     /**
-     * ユーザーIDに一致する情報を削除
+     * ユーザーIDに一致するユーザーを削除
      *
      * @param string $userId
      */
     public function userDelete(string $userId)
     {
-        $this->userDelete($userId);
+        $user = static::find($userId);
+        
+        if($user) {
+            $user->delete();
+        }
+        return $user;
     }
 
     /**
