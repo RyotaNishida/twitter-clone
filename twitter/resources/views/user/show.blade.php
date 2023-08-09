@@ -16,11 +16,11 @@
     @method('PUT')
     <ul>
       <li>
-        <label for="user-name">ユーザー名</label>
+        <label for="name">ユーザー名</label>
         <input value={{ $userDetail->name }} name='name'>
       </li>
       <li>
-        <label for="user-name">メールアドレス</label>
+        <label for="email">メールアドレス</label>
         <input value={{ $userDetail->email }} name='email'>
       </li>
       @if($errors->any())
