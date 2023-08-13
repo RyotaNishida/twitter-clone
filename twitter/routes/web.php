@@ -27,4 +27,13 @@ Route::group(['middleware' => 'auth'], function() {
         Route::put('/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('update');
         Route::delete('/{id}', [App\Http\Controllers\UserController::class, 'delete'])->name('delete');
     });
+    Route::group(['prefix' => 'tweets', 'as' => 'tweet.'], function() {
+        Route::post('/', [App\Http\Controllers\TweetController::class, 'postTweet'])->name('postTweet');
+        Route::get('/', [App\Http\Controllers\TweetController::class, 'getAll'])->name('getAll');
+        Route::get('/create', [App\Http\Controllers\TweetController::class, 'create'])->name('create');
+        Route::get('/{id}', [App\Http\Controllers\TweetController::class, 'show'])->name('detail');
+        Route::get('/{id}/edit', [App\Http\Controllers\TweetController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [App\Http\Controllers\TweetController::class, 'update'])->name('update');
+        Route::delete('/{id}', [App\Http\Controllers\TweetController::class, 'delete'])->name('delete');
+    });
 });
