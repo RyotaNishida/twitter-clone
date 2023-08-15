@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Follower;
 use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
@@ -86,5 +87,41 @@ class UserController extends Controller
     public function getAll(): View
     {
         return view('user.index', ['users' => User::all()]);
+    }
+
+    // フォロー
+    public function follow(Int $user_id)
+    {
+        $follower = auth()->user();
+        $is_following = $follower->isFollowing($user_id); //フォローしているかチェック
+        if(!$is_following) {
+            $follower->follow($user_id);
+        }
+        return back();
+    }
+
+    // フォロー解除
+    public function unfollow(Int $user_id)
+    {
+        $follower = auth()->user();
+        $is_following = $follower->isFollowing($user_id); //フォローしているかチェック
+        if($is_following) {
+            $follower->unfollow($user_id);
+        }
+        return back();
+    }
+
+    public function getAllFollowers(Follower $follower)
+    {
+        $loginUserId = auth()->user()->id;
+        $followers = $follower->getAllFollowers($loginUserId);
+        return view('user.follower', compact('followers'));
+    }
+
+    public function getFollowedUsers(Follower $follower)
+    {
+        $loginUserId = auth()->user()->id;
+        $followed = $follower->getAllFollowedUserByUserId($loginUserId);
+        return view('user.followed', compact('followed'));
     }
 }
