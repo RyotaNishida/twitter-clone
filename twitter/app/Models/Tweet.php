@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Collection\array;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\softDeletes;
@@ -16,22 +18,22 @@ class Tweet extends Model
      * 新規ツイートをデータベースに保存
      *
      * @param array $postTweet
-     * @return void
+     * @return boolean
      */
-    public function create(array $postTweet)
+    public function create(array $postTweet): bool
     {
         $this->user_id = $postTweet['user_id'];
         $this->content = $postTweet['tweet'];
-        return $this->save();
+        return dd($this->save());
     }
 
     /**
      * すべてのツイートを取得
      *
-     * @param [type] $user
-     * @return void
+     * @param User $user
+     * @return \Illuminate\Database\Eloquent\Collection|array
      */
-    public function getAll($user)
+    public function getAll(User $user)
     {
         $userId = $user->id;
         return $this->where('user_id', $userId)->get();
@@ -40,48 +42,48 @@ class Tweet extends Model
     /**
      * 指定されたツイートIDに一致するツイートを取得
      *
-     * @param int $tweetId
+     * @param Int $tweetId
      * @return Tweet
      */
-    public function findByTweetId(int $tweetId): Tweet
+    public function findByTweetId(Int $tweetId): Tweet
     {
-        return Tweet::findOrFail($tweetId);
+        return $this->findOrFail($tweetId);
     }
 
     /**
      * 編集するツイートを取得
      *
-     * @param [type] $tweetId
+     * @param Int $tweetId
      * @return Tweet
      */
-    public function getEditTweet($tweetId): Tweet
+    public function getEditTweet(Int $tweetId): Tweet
     {
-        return Tweet::findOrFail($tweetId);
+        return $this->findOrFail($tweetId);
     }
 
     /**
      * ツイートを更新する処理
      *
-     * @param array $postEditTweet
-     * @return void
+     * @param Array $updateTweet
+     * @return boolean
      */
-    public function tweetUpdate(array $postEditTweet)
+    public function updateTweet(Array $updateTweet): bool
     {
-        $this->content = $postEditTweet['tweet'];
-        $this->user_id = $postEditTweet['user_id'];
+        $this->content = $updateTweet['tweet'];
+        $this->user_id = $updateTweet['user_id'];
         return $this->update();
     }
 
     /**
      * ツイートをデータベースから削除
      *
-     * @param [type] $tweetId
-     * @return void
+     * @param Int $tweetId
+     * @return boolean
      */
-    public function tweetDelete($tweetId)
+    public function deleteTweet(Int $tweetId): bool
     {
-        $tweet = Tweet::findOrFail($tweetId);
-        return $tweet->delete();
+        $deleteTweet = $this->findOrFail($tweetId);
+        return $deleteTweet->delete();
     }
 
 }
