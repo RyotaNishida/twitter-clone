@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateTweetRequest;
-// use Illuminate\Http\Request;
-use App\Models\Tweet;
-use Illuminate\View\View;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateTweetRequest;
+use App\Models\Tweet;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+
 
 class TweetController extends Controller
 {
@@ -29,20 +30,20 @@ class TweetController extends Controller
      *
      * @param CreateTweetRequest $request
      * @param Tweet $tweet
-     * @return void
+     * @return RedirectResponse
      */
-    public function postTweet(CreateTweetRequest $request, Tweet $tweet)
+    public function postTweet(CreateTweetRequest $request, Tweet $tweet): RedirectResponse
     {
-        $user_id = auth()->id();
+        $userId = auth()->id();
         $postTweet = $request->all();
-        $postTweet['user_id'] = $user_id;
+        $postTweet['user_id'] = $userId;
         $tweet->create($postTweet);
 
         return redirect('tweets');
     }
 
     /**
-     * [ツイート一覧取得]メソッド
+     * ツイート一覧取得メソッド
      *
      * @param Tweet $tweet
      * @return View
@@ -56,57 +57,53 @@ class TweetController extends Controller
     /**
      * 指定されたツイートIDに一致するツイートを取得し、ビューに渡すメソッド
      *
-     * @param integer $tweetId
+     * @param Int $tweetId
      * @param Tweet $tweet
      * @return View
      */
-    public function show(int $tweetId, Tweet $tweet): View
+    public function show(Int $tweetId, Tweet $tweet): View
     {
-        $getTweetDetail = $tweet->findByTweetId($tweetId);
-        return view('tweet.show', ['tweetDetail' => $getTweetDetail]);
+        $tweetDetail = $tweet->findByTweetId($tweetId);
+        return view('tweet.show', ['tweetDetail' => $tweetDetail]);
     }
 
     /**
      * ツイート編集画面
      *
-     * @param integer $tweetId
+     * @param Int $tweetId
      * @param Tweet $tweet
      * @return View
      */
-    public function edit(int $tweetId, Tweet $tweet): View
+    public function edit(Int $tweetId, Tweet $tweet): View
     {
         $tweets = $tweet->getEditTweet($tweetId);
-        return view('tweet.edit', [
-            'tweets' => $tweets,
-        ]);
+        return view('tweet.edit', ['tweets' => $tweets]);
     }
 
     /**
      * ツイート編集処理
      *
      * @param CreateTweetRequest $request
-     * @param integer $tweetId
+     * @param Int $tweetId
      * @param Tweet $tweet
-     * @return void
+     * @return RedirectResponse
      */
-    public function update(CreateTweetRequest $request, int $tweetId, Tweet $tweet)
+    public function update(CreateTweetRequest $request, Int $tweetId, Tweet $tweet): RedirectResponse
     {
-        $postEditTweet = $request->all();
-        $tweet->tweetUpdate($postEditTweet);
-
+        $tweet->updateTweet($request->all());
         return redirect('tweets');
     }
 
     /**
-     * ツイート削除
+     * ツイート削除処理
      *
-     * @param integer $tweetId
+     * @param Int $tweetId
      * @param Tweet $tweet
-     * @return void
+     * @return RedirectResponse
      */
-    public function delete(int $tweetId, Tweet $tweet)
+    public function delete(Int $tweetId, Tweet $tweet): RedirectResponse
     {
-        $deleteTweet = $tweet->tweetDelete($tweetId);
+        $tweet->deleteTweet($tweetId);
         return redirect('tweets');
 
     }
