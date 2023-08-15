@@ -30,10 +30,10 @@ return new class extends Migration
             $table->index('content');
 
             $table->foreign('user_id') // users テーブルの id カラムと関連付けられる外部キー
-            ->references('id') // 外部キーが参照するカラムを指定。この場合、user_idカラムが usersテーブルのidカラムを参照します。
-            ->on('users') //外部キーが参照するテーブルを指定します。この場合、user_idカラムがusersテーブルを参照。
-            ->onDelete('cascade')
-            ->onUpdate('cascade');
+                ->references('id') // 外部キーが参照するカラムを指定。この場合、user_idカラムが usersテーブルのidカラムを参照します。
+                ->on('users') //外部キーが参照するテーブルを指定します。この場合、user_idカラムがusersテーブルを参照。
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             // 親テーブルのレコードが削除（または更新）された場合に、子テーブルの該当するレコードも一緒に削除する動作を定義します。
             // この場合、users テーブルの特定のユーザが削除された際に、関連するツイートも削除されます。
         });
