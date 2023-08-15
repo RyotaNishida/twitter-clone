@@ -24,7 +24,7 @@ class Tweet extends Model
     {
         $this->user_id = $postTweet['user_id'];
         $this->content = $postTweet['tweet'];
-        return dd($this->save());
+        return $this->save();
     }
 
     /**
