@@ -10,7 +10,7 @@
                     <div class="card-header">Create</div>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('tweet.postTweet') }}">
+                        <form method="POST" action="{{ route('tweet.createTweet') }}">
                             @csrf
                             <div class="form-group row mb-0">
                                 <div class="col-md-12 p-3 w-100 d-flex">
