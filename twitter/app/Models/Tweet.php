@@ -15,27 +15,27 @@ class Tweet extends Model
     protected $fillable = ['content'];
 
     /**
-     * 新規ツイートをデータベースに保存
+     * 新規ツイートを保存
      *
-     * @param array $postTweet
+     * @param Int $userId
+     * @param string $postTweet
      * @return boolean
      */
-    public function create(array $postTweet): bool
+    public function create(Int $userId, string $createTweet): bool
     {
-        $this->user_id = $postTweet['user_id'];
-        $this->content = $postTweet['tweet'];
+        $this->user_id = $userId;
+        $this->content = $createTweet;
         return $this->save();
     }
 
     /**
      * すべてのツイートを取得
      *
-     * @param User $user
+     * @param Int $userId
      * @return \Illuminate\Database\Eloquent\Collection|array
      */
-    public function getAll(User $user)
+    public function getAll(Int $userId)
     {
-        $userId = $user->id;
         return $this->where('user_id', $userId)->get();
     }
 
@@ -46,17 +46,6 @@ class Tweet extends Model
      * @return Tweet
      */
     public function findByTweetId(Int $tweetId): Tweet
-    {
-        return $this->findOrFail($tweetId);
-    }
-
-    /**
-     * 編集するツイートを取得
-     *
-     * @param Int $tweetId
-     * @return Tweet
-     */
-    public function getEditTweet(Int $tweetId): Tweet
     {
         return $this->findOrFail($tweetId);
     }
