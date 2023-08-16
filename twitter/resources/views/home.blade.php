@@ -21,16 +21,8 @@
                         @endif
                         {{ __('You are logged in!') }}
                     </div>
-
                     <div>
-                        <a href="{{ route('tweet.create') }}">
-                            ツイートする
-                        </a>
-                    </div>
-                    <div>
-                        <a href="{{ route('tweet.getAll') }}">
-                            ツイート一覧
-                        </a>
+                        <a href="{{ route('tweet.getAll') }}">ツイート一覧</a>
                     </div>
                 </div>
             </div>
