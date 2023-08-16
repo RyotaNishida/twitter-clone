@@ -32,12 +32,11 @@ class TweetController extends Controller
      * @param Tweet $tweet
      * @return RedirectResponse
      */
-    public function postTweet(CreateTweetRequest $request, Tweet $tweet): RedirectResponse
+    public function createTweet(CreateTweetRequest $request, Tweet $tweet): RedirectResponse
     {
         $userId = auth()->id();
-        $postTweet = $request->all();
-        $postTweet['user_id'] = $userId;
-        $tweet->create($postTweet);
+        $createTweet = $request->tweet;
+        $tweet->create($userId, $createTweet);
 
         return redirect('tweets');
     }
@@ -50,7 +49,7 @@ class TweetController extends Controller
      */
     public function getAll(Tweet $tweet): View
     {
-        $allTweets = $tweet->getAll(auth()->user());
+        $allTweets = $tweet->getAll(auth()->id());
         return view('tweet.index', ['allTweets' => $allTweets]);
     }
 
@@ -76,7 +75,7 @@ class TweetController extends Controller
      */
     public function edit(Int $tweetId, Tweet $tweet): View
     {
-        $tweets = $tweet->getEditTweet($tweetId);
+        $tweets = $tweet->findByTweetId($tweetId);
         return view('tweet.edit', ['tweets' => $tweets]);
     }
 
