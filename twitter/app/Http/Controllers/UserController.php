@@ -14,11 +14,11 @@ class UserController extends Controller
     /**
      * ユーザーIDを取得
      *
-     * @param integer $userId
+     * @param Int $userId
      * @param User $user
-     * @return View|RedirectResponse
+     * @return User
      */
-    public function findByUserId(int $userId, User $user): User
+    public function findByUserId(Int $userId, User $user): User
     {
         //ログイン中のIDを取得
         if(Auth::id() !== $userId) {
@@ -27,17 +27,17 @@ class UserController extends Controller
         return $user->findByUserId($userId);
     }
 
-
     /**
      * ユーザー詳細画面を表示
      *
-     * @param integer $userId
+     * @param Int $userId
      * @param User $user
      * @return View
      */
-    public function show(int $userId, User $user): View
+    public function show(Int $userId, User $user): View
     {
         $userDetail = $this->findByUserId($userId, $user);
+
         return view('user.show', ['userDetail' => $userDetail]);
     }
 
@@ -59,6 +59,7 @@ class UserController extends Controller
         ];
 
         $user->update($data);
+
         return redirect()->route('home')
             ->with('success', 'ユーザー情報が更新されました！');
     }
@@ -89,39 +90,61 @@ class UserController extends Controller
         return view('user.index', ['users' => User::all()]);
     }
 
-    // フォロー
-    public function follow(Int $user_id)
+    /**
+     * フォローする処理
+     *
+     * @param Int $userId
+     * @return RedirectResponse
+     */
+    public function follow(Int $userId): RedirectResponse
     {
         $follower = auth()->user();
-        $is_following = $follower->isFollowing($user_id); //フォローしているかチェック
-        if(!$is_following) {
-            $follower->follow($user_id);
-        }
+        $isFollowing = $follower->isFollowing($userId); //フォローしているかチェック
+        if(!$isFollowing) $follower->follow($userId);
+
         return back();
     }
 
-    // フォロー解除
-    public function unfollow(Int $user_id)
+    /**
+     * フォロー解除処理
+     *
+     * @param Int $userId
+     * @return RedirectResponse
+     */
+    public function unfollow(Int $userId): RedirectResponse
     {
         $follower = auth()->user();
-        $is_following = $follower->isFollowing($user_id); //フォローしているかチェック
-        if($is_following) {
-            $follower->unfollow($user_id);
-        }
+        $isFollowing = $follower->isFollowing($userId); //フォローしているかチェック
+        if($isFollowing) $follower->unfollow($userId);
+
         return back();
     }
 
-    public function getAllFollowers(Follower $follower)
+    /**
+     * フォローされているユーザーを表示
+     *
+     * @param Follower $follower
+     * @return View
+     */
+    public function getAllFollowers(Follower $follower): View
     {
-        $loginUserId = auth()->user()->id;
+        $loginUserId = auth()->id();
         $followers = $follower->getAllFollowers($loginUserId);
+
         return view('user.follower', compact('followers'));
     }
 
-    public function getFollowedUsers(Follower $follower)
+    /**
+     * フォローしているユーザーを表示
+     *
+     * @param Follower $follower
+     * @return View
+     */
+    public function getFollowedUsers(Follower $follower): View
     {
         $loginUserId = auth()->user()->id;
         $followed = $follower->getAllFollowedUserByUserId($loginUserId);
+
         return view('user.followed', compact('followed'));
     }
 }
