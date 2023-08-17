@@ -46,11 +46,11 @@ class Follower extends Model
      * フォロワー一覧を取得
      *
      * @param Int $loginUserId
-     * @return Collection|array
+     * @return Collection
      */
     public function getAllFollowers(Int $loginUserId): Collection
     {
-        return $followers = auth()->user()->followers()->get();
+        return auth()->user()->followers()->get();
     }
 
     /**
@@ -61,6 +61,6 @@ class Follower extends Model
      */
     public function getAllFollowedUserByUserId(Int $loginUserId): Collection
     {
-        return $follows = auth()->user()->follows()->get();
+        return auth()->user()->follows()->get();
     }
 }

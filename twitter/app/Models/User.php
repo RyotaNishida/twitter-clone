@@ -69,15 +69,17 @@ class User extends Authenticatable
     /**
      * ユーザーIDに一致するユーザーを削除
      *
-     * @param string $userId
+     * @param Int $userId
+     * @return void
      */
-    public function userDelete(string $userId)
+    public function userDelete(Int $userId)
     {
         $user = static::find($userId);
 
         if($user) {
             $user->delete();
         }
+        
         return $user;
     }
 
@@ -92,7 +94,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Undocumented function
+     * 中間テーブル(followersテーブルの設定)
      *
      * @return belongsToMany
      */
@@ -101,6 +103,11 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'followers', 'following_id', 'followed_id');
     }
 
+    /**
+     * 中間テーブル(followersテーブルの設定)
+     *
+     * @return void
+     */
     public function followers()
     {
         return $this->belongsToMany(User::class, 'followers', 'followed_id', 'following_id');
