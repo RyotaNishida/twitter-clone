@@ -142,7 +142,7 @@ class UserController extends Controller
      */
     public function getFollowedUsers(Follower $follower): View
     {
-        $loginUserId = auth()->user()->id;
+        $loginUserId = auth()->id();
         $followed = $follower->getAllFollowedUserByUserId($loginUserId);
 
         return view('user.followed', compact('followed'));
