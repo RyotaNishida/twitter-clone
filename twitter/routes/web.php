@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TweetController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,27 +22,27 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::group(['middleware' => 'auth'], function() {
     Route::group(['prefix' => 'user', 'as' => 'user.'], function() {
-        Route::get('/{id}', [App\Http\Controllers\UserController::class, 'show'])->name('show');
-        Route::put('/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('update');
-        Route::delete('/{id}', [App\Http\Controllers\UserController::class, 'delete'])->name('delete');
+        Route::get('/{id}', [UserController::class, 'show'])->name('show');
+        Route::put('/{id}', [UserController::class, 'update'])->name('update');
+        Route::delete('/{id}', [UserController::class, 'delete'])->name('delete');
     });
     Route::group(['prefix' => 'users', 'as' => 'users.'], function() {
-        Route::get('/', [App\Http\Controllers\UserController::class, 'getAll'])->name('index');
-        Route::post('/follow/{id}', [App\Http\Controllers\UserController::class, 'follow'])->name('follow');
-        Route::delete('/follow/{id}', [App\Http\Controllers\UserController::class, 'unfollow'])->name('unfollow');
-        Route::get('/follower', [App\Http\Controllers\UserController::class, 'getAllFollowers'])->name('getFollowers');
-        Route::get('/followed', [App\Http\Controllers\UserController::class, 'getFollowedUsers'])->name('getFollowedUsers');
+        Route::get('/', [UserController::class, 'getAll'])->name('index');
+        Route::get('/follower', [UserController::class, 'getAllFollowers'])->name('getFollowers');
+        Route::get('/followed', [UserController::class, 'getFollowedUsers'])->name('getFollowedUsers');
+        Route::post('/follow/{id}', [UserController::class, 'follow'])->name('follow');
+        Route::delete('/follow/{id}', [UserController::class, 'unfollow'])->name('unfollow');
     });
     Route::group(['prefix' => 'tweets', 'as' => 'tweet.'], function() {
-        Route::post('/', [App\Http\Controllers\TweetController::class, 'createTweet'])->name('createTweet');
-        Route::get('/', [App\Http\Controllers\TweetController::class, 'getAll'])->name('getAll');
-        Route::get('/create', [App\Http\Controllers\TweetController::class, 'create'])->name('create');
-        Route::get('/{id}', [App\Http\Controllers\TweetController::class, 'show'])->name('detail');
-        Route::get('/{id}/edit', [App\Http\Controllers\TweetController::class, 'edit'])->name('edit');
-        Route::put('/{id}', [App\Http\Controllers\TweetController::class, 'update'])->name('update');
-        Route::delete('/{id}', [App\Http\Controllers\TweetController::class, 'delete'])->name('delete');
+        Route::post('/', [TweetController::class, 'createTweet'])->name('createTweet');
+        Route::get('/', [TweetController::class, 'getAll'])->name('getAll');
+        Route::get('/create', [TweetController::class, 'create'])->name('create');
+        Route::get('/{id}', [TweetController::class, 'show'])->name('detail');
+        Route::get('/{id}/edit', [TweetController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [TweetController::class, 'update'])->name('update');
+        Route::delete('/{id}', [TweetController::class, 'delete'])->name('delete');
     });
 });
