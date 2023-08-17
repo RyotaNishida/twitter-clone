@@ -1,13 +1,54 @@
 @extends('layouts.app')
 
-@section('title', 'ユーザー一覧')
-
 @section('content')
-  <h2>ユーザー一覧</h2>
-  @foreach($users as $user)
-    <ul>
-      <li>ユーザー名：{{ $user->name }}</li>
-      <li>メールアドレス：{{ $user->email }}</li>
-    </ul>
-  @endforeach
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <p>
+                    <a href="{{ route('users.getFollowedUsers') }}">フォロー一覧</a>
+                </p>
+                <p>
+                    <a href="{{ route('users.getFollowers') }}">フォロワー一覧</a>
+                </p>
+                @foreach ($users as $user)
+                    {{-- ログイン中のユーザーは非表示に --}}
+                    @if (auth()->check() && $user->id !== auth()->user()->id)
+                        <div class="card">
+                            <div class="card-haeder p-3 w-100 d-flex">
+                                <img src="{{ $user->profile_image }}" class="rounded-circle" width="50" height="50">
+                                <div class="ml-2 d-flex flex-column">
+                                    <p class="mb-0">{{ $user->name }}</p>
+                                    <a href="{{ url('users/' . $user->id) }}"
+                                        class="text-secondary">{{ $user->screen_name }}</a>
+                                </div>
+
+                                @if (auth()->user()->isFollowed($user->id))
+                                    <div class="px-2">
+                                        <span class="px-1 bg-secondary text-light">フォローされています</span>
+                                    </div>
+                                @endif
+
+                                <div class="d-flex justify-content-end flex-grow-1">
+                                    @if (auth()->user()->isFollowing($user->id))
+                                        <form action="{{ route('users.unfollow', ['id' => $user->id]) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="submit" class="btn btn-danger">フォロー解除</button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('users.follow', ['id' => $user->id]) }}" method="POST">
+                                            @csrf
+
+                                            <button type="submit" class="btn btn-primary">フォローする</button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+    </div>
 @endsection
