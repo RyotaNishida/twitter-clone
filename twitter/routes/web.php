@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TweetController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\FavoriteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,9 +41,11 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post('/', [TweetController::class, 'createTweet'])->name('createTweet');
         Route::get('/', [TweetController::class, 'getAll'])->name('getAll');
         Route::get('/create', [TweetController::class, 'create'])->name('create');
+        Route::get('/favorite', [FavoriteController::class, 'getAllByTweetIds'])->name('getFavorite');
         Route::get('/{id}', [TweetController::class, 'show'])->name('detail');
         Route::get('/{id}/edit', [TweetController::class, 'edit'])->name('edit');
         Route::put('/{id}', [TweetController::class, 'update'])->name('update');
         Route::delete('/{id}', [TweetController::class, 'delete'])->name('delete');
+        Route::post('/favorite/{tweetId}', [FavoriteController::class, 'favoriteTweet'])->name('favorite');
     });
 });
