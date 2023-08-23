@@ -5,6 +5,7 @@
 @section('content')
     <div class='container'>
         <div class='row justify-content-center'>
+            <p><a href="{{ route('tweet.getFavorite', ['userId' => Auth::id()]) }}">いいねした投稿一覧</a></p>
             @foreach ($allTweets as $tweet)
                 <div class='col-md-8 mb-3'>
                     <div class='card'>
@@ -24,6 +25,20 @@
                                 <p class="mb-0 text-secondary"><a
                                         href="{{ route('tweet.detail', ['id' => $tweet->id]) }}">詳細を見る</a></p>
                             </div>
+                            @if (!auth()->user()->isFavorite(Auth::user()->id, $tweet->id))
+                                <p class="favorite-marke">
+                                    <a class="js-like-toggle loved" href="" data-tweetid="{{ $tweet->id }}">
+                                        <i class="fas fa-heart"></i>
+                                    </a>
+                                </p>
+                            @else
+                                <p class="favorite-marke">
+                                    <a class="js-like-toggle" href="" data-tweetid="{{ $tweet->id }}">
+                                        <i class="fas fa-heart"></i>
+                                    </a>
+                                    {{-- <span class="favoriteCount"></span> --}}
+                                </p>
+                            @endif
                         </div>
                     </div>
                 </div>

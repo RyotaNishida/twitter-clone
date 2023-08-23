@@ -20,6 +20,21 @@
                     <div class='card-body'>
                         {{ $tweetDetail->content }}
                         <div class="d-flex justify-content-end flex-grow-1">
+                            @if (!auth()->user()->isFavorite(Auth::user()->id, $tweetDetail->id))
+                                <p class="favorite-marke">
+                                    <a class="js-like-toggle loved" href="" data-tweetid="{{ $tweetDetail->id }}">
+                                        <i class="fas fa-heart"></i>
+                                    </a>
+                                </p>
+                            @else
+                                <p class="favorite-marke">
+                                    <a class="js-like-toggle" href="" data-tweetid="{{ $tweetDetail->id }}">
+                                        <i class="fas fa-heart"></i>
+                                    </a>
+                                    {{-- <span class="favoriteCount"></span> --}}
+                                </p>
+                            @endif
+
                             <p>
                                 <button type="submit" class="btn btn-danger">
                                     <a href="{{ route('tweet.edit', ['id' => $tweetDetail]) }}">編集する</a>
@@ -33,10 +48,12 @@
                             </form>
                             </p>
 
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 @endsection()
