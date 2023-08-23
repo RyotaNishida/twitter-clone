@@ -79,7 +79,7 @@ class User extends Authenticatable
         if($user) {
             $user->delete();
         }
-        
+
         return $user;
     }
 
@@ -155,5 +155,17 @@ class User extends Authenticatable
     public function isFollowed(Int $user_id): bool
     {
         return (boolean) $this->followers()->where('following_id', $user_id)->first(['id']);
+    }
+
+    /**
+     * いいねしているかチェックする
+     *
+     * @param Int $userId
+     * @param Int $tweetId
+     * @return boolean
+     */
+    public function isFavorite(Int $userId, Int $tweetId): bool
+    {
+        return Favorite::where('user_id', $userId)->where('tweet_id', $tweetId)->exists();
     }
 }

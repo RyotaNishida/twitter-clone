@@ -75,4 +75,17 @@ class Tweet extends Model
         return $deleteTweet->delete();
     }
 
+
+    /**
+     * ログイン中のユーザーがいいねしたツイートを取得
+     *
+     * @param Int $userId
+     * @return Collection
+     */
+    public function getAllFavoriteTweets(Int $userId): Collection
+    {
+        return $favoriteTweets = Favorite::where('user_id', $userId)
+            ->with('tweet')
+            ->get();
+    }
 }
