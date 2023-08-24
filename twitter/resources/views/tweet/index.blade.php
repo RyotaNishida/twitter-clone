@@ -25,24 +25,24 @@
                                 <p class="mb-0 text-secondary"><a
                                         href="{{ route('tweet.detail', ['id' => $tweet->id]) }}">詳細を見る</a></p>
                             </div>
-                            @if (!auth()->user()->isFavorite(Auth::user()->id, $tweet->id))
-                                <p class="favorite-marke">
-                                    <a class="js-like-toggle loved" href="" data-tweetid="{{ $tweet->id }}">
-                                        <i class="fas fa-heart"></i>
-                                    </a>
-                                </p>
-                            @else
-                                <p class="favorite-marke">
-                                    <a class="js-like-toggle" href="" data-tweetid="{{ $tweet->id }}">
-                                        <i class="fas fa-heart"></i>
-                                    </a>
-                                    {{-- <span class="favoriteCount"></span> --}}
-                                </p>
-                            @endif
+                            @php
+                                $isFavorite = auth()
+                                    ->user()
+                                    ->isFavorite($tweet->id);
+                            @endphp
+                            <p class="favorite-marke">
+                                <a class="js-like-toggle {{ $isFavorite ? 'loved' : '' }}" href=""
+                                    data-tweetid="{{ $tweet->id }}">
+                                    <i class="fas fa-heart"></i>
+                                </a>
+                            </p>
                         </div>
                     </div>
                 </div>
             @endforeach
         </div>
     </div>
+
+    <script src="{{ asset('/js/favorite.js') }}"></script>
+
 @endsection()
