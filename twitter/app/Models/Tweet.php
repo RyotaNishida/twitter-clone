@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Favorite;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Collection\array;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -56,7 +57,7 @@ class Tweet extends Model
      * @param Array $updateTweet
      * @return boolean
      */
-    public function updateTweet(Array $updateTweet): bool
+    public function updateTweet(array $updateTweet): bool
     {
         $this->content = $updateTweet['tweet'];
         $this->user_id = $updateTweet['user_id'];
@@ -68,7 +69,7 @@ class Tweet extends Model
      *
      * @param Int $tweetId
      * @return boolean
-     */
+     *
     public function deleteTweet(Int $tweetId): bool
     {
         $deleteTweet = $this->findOrFail($tweetId);
@@ -84,8 +85,9 @@ class Tweet extends Model
      */
     public function getAllFavoriteTweets(Int $userId): Collection
     {
-        return $favoriteTweets = Favorite::where('user_id', $userId)
-            ->with('tweet')
-            ->get();
+        // ①favoriteテーブルにおいて、user_idで絞り込み。tweet_idのみ取得
+        $favoriteTweets = Favorite::where('user_id', $userId)->pluck('tweet_id')->toArray();
+        // ②絞り込んだfavoriteのtweet_idをもとに、紐付くtweetを取得
+        return $tweets = Tweet::whereIn('id', $favoriteTweets)->get();
     }
 }

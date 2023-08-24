@@ -29,25 +29,13 @@ class Favorite extends Model
     }
 
     /**
-     * いいねしているかチェックする
-     *
-     * @param Int $userId
-     * @param Int $tweetId
-     * @return boolean
-     */
-    public function isFavorite(Int $userId, Int $tweetId): bool
-    {
-        return Favorite::where('user_id', $userId)->where('tweet_id', $tweetId)->exists();
-    }
-
-    /**
      * いいねする
      *
      * @param Int $userId
      * @param Int $tweetId
-     * @return boolean
+     * @return void
      */
-    public function favorite(Int $userId, Int $tweetId): bool
+    public function favorite(Int $userId, String $tweetId)
     {
         $favorite = new Favorite;
         $favorite->user_id = $userId;
@@ -64,6 +52,9 @@ class Favorite extends Model
      */
     public function removeFavorite(Int $userId, Int $tweetId)
     {
-        $this->where('user_id', $userId)->where('tweet_id', $tweetId)->delete();
+        Favorite::where([
+            ['user_id', $userId],
+            ['tweet_id', $tweetId],
+            ])->delete();
     }
 }

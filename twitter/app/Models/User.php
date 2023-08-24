@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Favorite;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -164,8 +165,12 @@ class User extends Authenticatable
      * @param Int $tweetId
      * @return boolean
      */
-    public function isFavorite(Int $userId, Int $tweetId): bool
+    public function isFavorite(String $tweetId): bool
     {
-        return Favorite::where('user_id', $userId)->where('tweet_id', $tweetId)->exists();
+        $userId = auth()->id();
+        return Favorite::where([
+            ['user_id', $userId],
+            ['tweet_id', $tweetId],
+            ])->exists();
     }
 }
