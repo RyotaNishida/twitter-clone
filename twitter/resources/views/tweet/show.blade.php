@@ -31,7 +31,6 @@
                                     <a class="js-like-toggle" href="" data-tweetid="{{ $tweetDetail->id }}">
                                         <i class="fas fa-heart"></i>
                                     </a>
-                                    {{-- <span class="favoriteCount"></span> --}}
                                 </p>
                             @endif
 
