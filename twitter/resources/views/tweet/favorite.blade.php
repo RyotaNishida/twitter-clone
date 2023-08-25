@@ -5,8 +5,7 @@
 @section('content')
     <div class='container'>
         <div class='row justify-content-center'>
-            <p><a href="{{ route('tweet.getFavorite', ['userId' => Auth::id()]) }}">いいねした投稿一覧</a></p>
-            @foreach ($allTweets as $tweet)
+            @foreach ($favoriteTweets as $favoriteTweet)
                 <div class='col-md-8 mb-3'>
                     <div class='card'>
                         <div class="card-haeder p-3 w-100 d-flex">
@@ -16,23 +15,23 @@
                                 <a href="" class="text-secondary"></a>
                             </div>
                             <div class="d-flex justify-content-end flex-grow-1">
-                                <p class="mb-0 text-secondary">{{ $tweet->created_at }}</p>
+                                <p class="mb-0 text-secondary">{{ $favoriteTweet->created_at }}</p>
                             </div>
                         </div>
                         <div class='card-body'>
-                            {{ $tweet->content }}
+                            {{ $favoriteTweet->content }}
                             <div class="d-flex justify-content-end flex-grow-1">
                                 <p class="mb-0 text-secondary"><a
-                                        href="{{ route('tweet.detail', ['id' => $tweet->id]) }}">詳細を見る</a></p>
+                                        href="{{ route('tweet.detail', ['id' => $favoriteTweet->id]) }}">詳細を見る</a></p>
                             </div>
                             @php
                                 $isFavorite = auth()
                                     ->user()
-                                    ->isFavorite($tweet->id);
+                                    ->isFavorite($favoriteTweet->id);
                             @endphp
                             <p class="favorite-marke">
                                 <a class="js-like-toggle {{ $isFavorite ? 'loved' : '' }}" href=""
-                                    data-tweetid="{{ $tweet->id }}">
+                                    data-tweetid="{{ $favoriteTweet->id }}">
                                     <i class="fas fa-heart"></i>
                                 </a>
                             </p>
