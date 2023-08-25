@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\TweetController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\FavoriteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,8 +48,8 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/{id}/edit', [TweetController::class, 'edit'])->name('edit');
         Route::put('/{id}', [TweetController::class, 'update'])->name('update');
         Route::delete('/{id}', [TweetController::class, 'delete'])->name('delete');
-        Route::post('/reply/{id}', [TweetController::class, 'createReply'])->name('reply');
-        Route::delete('/reply/{id}', [TweetController::class, 'deleteReply'])->name('deletereply');
-        Route::put('/reply/{id}', [TweetController::class, 'editReply'])->name('editreply');
+        Route::post('/reply/{id}', [ReplyController::class, 'createReply'])->name('reply');
+        Route::delete('/reply/{id}', [ReplyController::class, 'deleteReply'])->name('deletereply');
+        Route::put('/reply/{id}', [ReplyController::class, 'editReply'])->name('editreply');
     });
 });
