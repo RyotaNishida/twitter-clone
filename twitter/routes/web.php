@@ -47,5 +47,8 @@ Route::group(['middleware' => 'auth'], function() {
         Route::get('/{id}/edit', [TweetController::class, 'edit'])->name('edit');
         Route::put('/{id}', [TweetController::class, 'update'])->name('update');
         Route::delete('/{id}', [TweetController::class, 'delete'])->name('delete');
+        Route::post('/reply/{id}', [TweetController::class, 'createReply'])->name('reply');
+        Route::delete('/reply/{id}', [TweetController::class, 'deleteReply'])->name('deletereply');
+        Route::put('/reply/{id}', [TweetController::class, 'editReply'])->name('editreply');
     });
 });
