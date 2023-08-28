@@ -50,7 +50,7 @@ class Reply extends Model
      */
     public function deleteReply(int $replyId)
     {
-        $deleteReply = $this->findOrFail($replyId);
+        $deleteReply = $this->find($replyId);
         return $deleteReply->delete();
     }
 
