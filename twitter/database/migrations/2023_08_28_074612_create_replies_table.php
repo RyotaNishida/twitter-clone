@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('replys', function (Blueprint $table) {
+        Schema::create('replies', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id')->comment('ユーザーID');
             $table->unsignedInteger('tweet_id')->comment('ツイートID');
@@ -43,6 +43,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('replys');
+        Schema::dropIfExists('replies');
     }
 };
