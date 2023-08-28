@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\createReplyRequest;
 use App\Models\Reply;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -11,25 +12,25 @@ class ReplyController extends Controller
     /**
      * 新規リプライ
      *
-     * @param Request $request
-     * @param Int $tweetId
+     * @param CreateReplyRequest $request
+     * @param integer $tweetId
      * @param Reply $reply
-     * @return void
+     * @return RedirectResponse
      */
-    public function createReply(Request $request, Int $tweetId, Reply $reply): RedirectResponse
+    public function createReply(CreateReplyRequest $request, int $tweetId, Reply $reply): RedirectResponse
     {
-        $postReply = $reply->postReply($request->input('reply'), $tweetId);
+        $reply->storeReply($request->input('reply'), $tweetId);
         return back();
     }
 
     /**
      * リプライを削除
      *
-     * @param Int $replyId
+     * @param integer $replyId
      * @param Reply $reply
      * @return RedirectResponse
      */
-    public function deleteReply(Int $replyId, Reply $reply): RedirectResponse
+    public function deleteReply(int $replyId, Reply $reply): RedirectResponse
     {
         $deleteReply = $reply->deleteReply($replyId);
         return back();
@@ -46,9 +47,8 @@ class ReplyController extends Controller
     {
         $userId = auth()->id();
         $editReply = $request->input('reply');
-        $editReplyId = intval($request->input('replyId'));
-        $postEdit = $reply->editReply($userId, $editReply, $editReplyId);
-
+        $editReplyId = $request->id;
+        $reply->editReply($userId, $editReply, $editReplyId);
         return back();
     }
 }
