@@ -51,6 +51,9 @@
                                 @csrf
                                 <input type="text" name='reply' placeholder="返信する">
                                 <button type="submit">返信</button>
+                                @foreach ($errors->all() as $error)
+                                    <p>{{ $error }}</p>
+                                @endforeach
                             </form>
                         </div>
                     </div>
@@ -82,9 +85,8 @@
                                 <form action="{{ route('tweet.editreply', ['id' => $reply->id]) }}" method="POST">
                                     @csrf
                                     @method('PUT')
-                                    <input type="hidden" name="replyId" value="{{ $reply->id }}">
                                     <input class="edit-formarea edit-formarea-{{ $reply->id }}" name="reply"
-                                        style="display:none"></input>
+                                        style="display:none">
                                     <input class="edit-formbtn edit-form-button-{{ $reply->id }}" type="submit"
                                         style="display:none" value='送信'>
                                 </form>
@@ -109,5 +111,5 @@
             @endforeach
         </div>
     </div>
-<script src="{{ asset('/js/reply.js') }}"></script>
+    <script src="{{ asset('/js/reply.js') }}"></script>
 @endsection()
