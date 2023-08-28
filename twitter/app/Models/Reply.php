@@ -8,32 +8,36 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reply extends Model
 {
-    protected $table = 'replys';
+    protected $table = 'replies';
 
-    protected $fillable = ['user_id', 'content'];
+    protected $fillable = [
+        'user_id',
+        'content',
+        'tweet_id',
+    ];
 
     /**
      * リプライを作成
      *
-     * @param String $postReply
-     * @param Int $tweetId
+     * @param string $storeReply
+     * @param integer $tweetId
      * @return void
      */
-    public function postReply(String $postReply, Int $tweetId)
+    public function storeReply(string $storeReply, int $tweetId)
     {
         $this->user_id = auth()->id();
         $this->tweet_id = $tweetId;
-        $this->content = $postReply;
+        $this->content = $storeReply;
         return $this->save();
     }
 
     /**
      * ツイート毎にすべてのリプライを取得
      *
-     * @param Int $tweetId
+     * @param integer $tweetId
      * @return Collection
      */
-    public function getAllReply(Int $tweetId): Collection
+    public function getAllReply(int $tweetId): Collection
     {
         return $allReplys = $this::where('tweet_id', $tweetId)->get();
     }
@@ -41,10 +45,10 @@ class Reply extends Model
     /**
      * リプライ削除
      *
-     * @param Int $replyId
+     * @param integer $replyId
      * @return void
      */
-    public function deleteReply(Int $replyId)
+    public function deleteReply(int $replyId)
     {
         $deleteReply = $this->findOrFail($replyId);
         return $deleteReply->delete();
@@ -53,12 +57,12 @@ class Reply extends Model
     /**
      * リプライを編集
      *
-     * @param Int $userId
-     * @param String $editReply
-     * @param Int $editReplyId
+     * @param integer $userId
+     * @param string $editReply
+     * @param string $editReplyId
      * @return boolean
      */
-    public function editReply(Int $userId, String $editReply, Int $editReplyId): bool
+    public function editReply(int $userId, string $editReply, string $editReplyId): bool
     {
         return $reply = $this->where('id', '=', $editReplyId)->update([
             'content' => $editReply
