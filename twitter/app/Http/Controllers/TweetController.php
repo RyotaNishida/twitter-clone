@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateTweetRequest;
+use App\Models\Reply;
 use App\Models\Tweet;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 
@@ -54,16 +56,20 @@ class TweetController extends Controller
     }
 
     /**
-     * 指定されたツイートIDに一致するツイートを取得し、ビューに渡すメソッド
+     * 指定されたツイートIDに一致するツイートとリプライを取得し、ビューに渡すメソッド
      *
      * @param Int $tweetId
      * @param Tweet $tweet
      * @return View
      */
-    public function show(Int $tweetId, Tweet $tweet): View
+    public function show(Int $tweetId, Tweet $tweet, Reply $reply): View
     {
         $tweetDetail = $tweet->findByTweetId($tweetId);
-        return view('tweet.show', ['tweetDetail' => $tweetDetail]);
+        $allReply = $reply->getAllReply($tweetId);
+        return view('tweet.show', [
+            'tweetDetail' => $tweetDetail,
+            'allReply' => $allReply,
+        ]);
     }
 
     /**
@@ -104,6 +110,5 @@ class TweetController extends Controller
     {
         $tweet->deleteTweet($tweetId);
         return redirect('tweets');
-
     }
 }

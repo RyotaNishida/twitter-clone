@@ -1,3 +1,27 @@
 .loved {
     color: red;
 }
+
+.edit-btn,
+.delete-btn
+{
+    font-size: 18px;
+    color: gray;
+    background: transparent;
+    border: none;
+    padding: 12;
+    appearance: none;
+}
+
+.edit-formbtn {
+    margin-left: 10px;
+    padding: 6px;
+}
+
+.edit-formarea {
+    padding: 6px;
+}
+
+.reply-content {
+    padding: 8px;
+}

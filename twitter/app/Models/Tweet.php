@@ -69,7 +69,7 @@ class Tweet extends Model
      *
      * @param Int $tweetId
      * @return boolean
-     *
+     */
     public function deleteTweet(Int $tweetId): bool
     {
         $deleteTweet = $this->findOrFail($tweetId);
