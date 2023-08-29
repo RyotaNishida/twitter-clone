@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::group(['prefix' => 'tweets', 'as' => 'tweet.'], function() {
         Route::post('/', [TweetController::class, 'createTweet'])->name('createTweet');
         Route::get('/', [TweetController::class, 'getAll'])->name('getAll');
+        Route::get('/search', [TweetController::class, 'searchByQuery'])->name('query');
         Route::get('/create', [TweetController::class, 'create'])->name('create');
         Route::get('/favorite', [FavoriteController::class, 'getAllByTweetIds'])->name('getFavorite');
         Route::post('/favorite/{favoriteTweetId}', [FavoriteController::class, 'favoriteTweet'])->name('favorite');
