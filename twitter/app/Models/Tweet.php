@@ -48,7 +48,7 @@ class Tweet extends Model
      */
     public function findByTweetId(int $tweetId): Tweet
     {
-        return $this->findOrFail($tweetId);
+        return $this->find($tweetId);
     }
 
     /**
