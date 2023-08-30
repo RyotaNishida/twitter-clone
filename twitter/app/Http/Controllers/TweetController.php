@@ -45,15 +45,36 @@ class TweetController extends Controller
     }
 
     /**
-     * ツイート一覧取得メソッド
+     * ツイート一覧・検索結果一覧取得メソッド
      *
      * @param Tweet $tweet
+     * @param CreateQueryRequest $request
      * @return View
      */
-    public function getAll(Tweet $tweet): View
+    public function getAll(Tweet $tweet, CreateQueryRequest $request): View
     {
-        $allTweets = $tweet->getAll();
-        return view('tweet.index', ['allTweets' => $allTweets]);
+        $query = $request->input('searchQuery');
+
+        if($query) {
+            //検索クエリが提供された場合、検索結果を取得
+            $tweets = $this->searchByQuery($query);
+            return view('tweet.index', ['tweets' => $tweets, 'query' => $query]);
+        } else {
+            $tweets = $tweet->getAll();
+            return view('tweet.index', ['tweets' => $tweets]);
+        }
+    }
+
+    /**
+     * 検索ワードに紐づく投稿を検索
+     *
+     * @param string $query
+     * @return void
+     */
+    public function searchByQuery(string $query)
+    {
+        $tweet = new Tweet;
+        return $tweet->searchByQuery($query);
     }
 
     /**
@@ -96,7 +117,9 @@ class TweetController extends Controller
      */
     public function update(CreateTweetRequest $request, int $tweetId, Tweet $tweet): RedirectResponse
     {
-        $tweet->updateTweet($request->all());
+        // request->allは推奨しない。
+        // 意図しないパラメータが入る可能性があり、インジェクション攻撃を受ける可能性があり）
+        $tweet->updateTweet($request->validated());
         return redirect('tweets');
     }
 
@@ -109,22 +132,7 @@ class TweetController extends Controller
      */
     public function delete(int $tweetId, Tweet $tweet): RedirectResponse
     {
-        $tweet->deleteTweet($tweetId);
+        $tweet->delete($tweetId);
         return redirect('tweets');
-    }
-
-    /**
-     * 検索ワードに紐づく投稿を検索
-     *
-     * @param CreateQueryRequest $request
-     * @param Tweet $tweet
-     * @return View
-     */
-    public function searchByQuery(CreateQueryRequest $request, Tweet $tweet): View
-    {
-        $searchQuery = $request->input('searchQuery');
-        $getSearchTweets = $tweet->searchByQuery($searchQuery);
-
-        return view('tweet.searchResult', compact('searchQuery', 'getSearchTweets'));
     }
 }

@@ -29,18 +29,6 @@ class CreateQueryRequest extends FormRequest
     }
 
     /**
-     * バリデーション項目名定義
-     *
-     * @return void
-     */
-    public function attributes()
-    {
-        return [
-            'searchQuery' => '検索ワード',
-        ];
-    }
-
-    /**
      * バリデーションメッセージ
      *
      * @return void
@@ -48,7 +36,7 @@ class CreateQueryRequest extends FormRequest
     public function messages()
     {
         return [
-            'searchQuery.required' => ':attributeを入力してください',
+            'searchQuery.required' => '検索キーワードを入力してください',
         ];
     }
 }
