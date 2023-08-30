@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateQueryRequest;
 use App\Http\Requests\CreateTweetRequest;
 use App\Models\Reply;
 use App\Models\Tweet;
@@ -44,25 +45,46 @@ class TweetController extends Controller
     }
 
     /**
-     * ツイート一覧取得メソッド
+     * ツイート一覧・検索結果一覧取得メソッド
      *
      * @param Tweet $tweet
+     * @param CreateQueryRequest $request
      * @return View
      */
-    public function getAll(Tweet $tweet): View
+    public function getAll(Tweet $tweet, CreateQueryRequest $request): View
     {
-        $allTweets = $tweet->getAll(auth()->id());
-        return view('tweet.index', ['allTweets' => $allTweets]);
+        $query = $request->input('searchQuery');
+
+        if($query) {
+            //検索クエリが提供された場合、検索結果を取得
+            $tweets = $this->searchByQuery($query);
+            return view('tweet.index', ['tweets' => $tweets, 'query' => $query]);
+        } else {
+            $tweets = $tweet->getAll();
+            return view('tweet.index', ['tweets' => $tweets]);
+        }
+    }
+
+    /**
+     * 検索ワードに紐づく投稿を検索
+     *
+     * @param string $query
+     * @return void
+     */
+    public function searchByQuery(string $query)
+    {
+        $tweet = new Tweet;
+        return $tweet->searchByQuery($query);
     }
 
     /**
      * 指定されたツイートIDに一致するツイートとリプライを取得し、ビューに渡すメソッド
      *
-     * @param Int $tweetId
+     * @param integer $tweetId
      * @param Tweet $tweet
      * @return View
      */
-    public function show(Int $tweetId, Tweet $tweet, Reply $reply): View
+    public function show(int $tweetId, Tweet $tweet, Reply $reply): View
     {
         $tweetDetail = $tweet->findByTweetId($tweetId);
         $allReply = $reply->getAllReply($tweetId);
@@ -75,11 +97,11 @@ class TweetController extends Controller
     /**
      * ツイート編集画面
      *
-     * @param Int $tweetId
+     * @param integer $tweetId
      * @param Tweet $tweet
      * @return View
      */
-    public function edit(Int $tweetId, Tweet $tweet): View
+    public function edit(int $tweetId, Tweet $tweet): View
     {
         $tweets = $tweet->findByTweetId($tweetId);
         return view('tweet.edit', ['tweets' => $tweets]);
@@ -89,26 +111,28 @@ class TweetController extends Controller
      * ツイート編集処理
      *
      * @param CreateTweetRequest $request
-     * @param Int $tweetId
+     * @param integer $tweetId
      * @param Tweet $tweet
      * @return RedirectResponse
      */
-    public function update(CreateTweetRequest $request, Int $tweetId, Tweet $tweet): RedirectResponse
+    public function update(CreateTweetRequest $request, int $tweetId, Tweet $tweet): RedirectResponse
     {
-        $tweet->updateTweet($request->all());
+        // request->allは推奨しない。
+        // 意図しないパラメータが入る可能性があり、インジェクション攻撃を受ける可能性があり）
+        $tweet->updateTweet($request->validated());
         return redirect('tweets');
     }
 
     /**
      * ツイート削除処理
      *
-     * @param Int $tweetId
+     * @param integer $tweetId
      * @param Tweet $tweet
      * @return RedirectResponse
      */
-    public function delete(Int $tweetId, Tweet $tweet): RedirectResponse
+    public function delete(int $tweetId, Tweet $tweet): RedirectResponse
     {
-        $tweet->deleteTweet($tweetId);
+        $tweet->delete($tweetId);
         return redirect('tweets');
     }
 }

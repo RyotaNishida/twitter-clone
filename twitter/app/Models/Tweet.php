@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use App\Models\Favorite;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Collection\array;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\softDeletes;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class Tweet extends Model
 {
@@ -18,11 +20,11 @@ class Tweet extends Model
     /**
      * 新規ツイートを保存
      *
-     * @param Int $userId
-     * @param string $postTweet
+     * @param integer $userId
+     * @param string $createTweet
      * @return boolean
      */
-    public function create(Int $userId, string $createTweet): bool
+    public function create(int $userId, string $createTweet): bool
     {
         $this->user_id = $userId;
         $this->content = $createTweet;
@@ -32,23 +34,22 @@ class Tweet extends Model
     /**
      * すべてのツイートを取得
      *
-     * @param Int $userId
-     * @return \Illuminate\Database\Eloquent\Collection|array
+     * @return LengthAwarePaginator
      */
-    public function getAll(Int $userId)
+    public function getAll(): LengthAwarePaginator
     {
-        return $this->where('user_id', $userId)->get();
+        return $this->orderBy('created_at', 'desc')->paginate(config('paginate.paginate'));
     }
 
     /**
      * 指定されたツイートIDに一致するツイートを取得
      *
-     * @param Int $tweetId
+     * @param integer $tweetId
      * @return Tweet
      */
-    public function findByTweetId(Int $tweetId): Tweet
+    public function findByTweetId(int $tweetId): Tweet
     {
-        return $this->findOrFail($tweetId);
+        return $this->find($tweetId);
     }
 
     /**
@@ -59,35 +60,39 @@ class Tweet extends Model
      */
     public function updateTweet(array $updateTweet): bool
     {
-        $this->content = $updateTweet['tweet'];
-        $this->user_id = $updateTweet['user_id'];
+        $this->content = $updateTweet;
+        $this->user_id = auth()->id();
         return $this->update();
     }
 
     /**
-     * ツイートをデータベースから削除
-     *
-     * @param Int $tweetId
-     * @return boolean
-     */
-    public function deleteTweet(Int $tweetId): bool
-    {
-        $deleteTweet = $this->findOrFail($tweetId);
-        return $deleteTweet->delete();
-    }
-
-
-    /**
      * ログイン中のユーザーがいいねしたツイートを取得
      *
-     * @param Int $userId
+     * @param integer $userId
      * @return Collection
      */
-    public function getAllFavoriteTweets(Int $userId): Collection
+    public function getAllFavoriteTweets(int $userId): Collection
     {
         // ①favoriteテーブルにおいて、user_idで絞り込み。tweet_idのみ取得
         $favoriteTweets = Favorite::where('user_id', $userId)->pluck('tweet_id')->toArray();
         // ②絞り込んだfavoriteのtweet_idをもとに、紐付くtweetを取得
         return $tweets = Tweet::whereIn('id', $favoriteTweets)->get();
+    }
+
+    /**
+     * 検索ワードに紐づくデータをDBより取得
+     *
+     * @param string $searchQuery
+     * @return LengthAwarePaginator
+     */
+    public function searchByQuery(string $query): LengthAwarePaginator
+    {
+        $getTweetQuery = $this::query();
+
+        if($query) {
+            return $this->where('content', 'LIKE', "%{$query}%")
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(config('paginate.paginate'));
+    }
     }
 }
