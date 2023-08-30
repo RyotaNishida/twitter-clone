@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Favorite;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Collection\array;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -37,7 +38,7 @@ class Tweet extends Model
      */
     public function getAll(): LengthAwarePaginator
     {
-        return $this::orderBy('created_at', 'desc')->paginate(10);
+        return $this->orderBy('created_at', 'desc')->paginate(config('paginate.paginate'));
     }
 
     /**
@@ -59,23 +60,10 @@ class Tweet extends Model
      */
     public function updateTweet(array $updateTweet): bool
     {
-        $this->content = $updateTweet['tweet'];
-        $this->user_id = $updateTweet['user_id'];
+        $this->content = $updateTweet;
+        $this->user_id = auth()->id();
         return $this->update();
     }
-
-    /**
-     * ツイートをデータベースから削除
-     *
-     * @param integer $tweetId
-     * @return boolean
-     */
-    public function deleteTweet(int $tweetId): bool
-    {
-        $deleteTweet = $this->findOrFail($tweetId);
-        return $deleteTweet->delete();
-    }
-
 
     /**
      * ログイン中のユーザーがいいねしたツイートを取得
@@ -97,21 +85,14 @@ class Tweet extends Model
      * @param string $searchQuery
      * @return LengthAwarePaginator
      */
-    public function searchByQuery(string $searchQuery): LengthAwarePaginator
+    public function searchByQuery(string $query): LengthAwarePaginator
     {
         $getTweetQuery = $this::query();
 
-        if(!empty($searchQuery)) {
-            // $searchQueryの中身が空で無い場合処理実行
-            $searchTweet = $getTweetQuery
-                ->where('content', 'LIKE', "%{$searchQuery}%")
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
-
-            return $searchTweet;
-        }
-
-        $queryTweet = $getTweetQuery->paginate(10);
-        return $queryTweet;
+        if($query) {
+            return $this->where('content', 'LIKE', "%{$query}%")
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(config('paginate.paginate'));
+    }
     }
 }
