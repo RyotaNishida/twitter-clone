@@ -4,10 +4,12 @@
 
 @section('content')
     <div class='container'>
+        <h1>{{ isset($query) ? '検索結果' : 'ツイート一覧' }}</h1>
+
         <div class='row justify-content-center'>
             <p><a href="{{ route('tweet.getFavorite', ['userId' => Auth::id()]) }}">いいねした投稿一覧</a></p>
             <div>
-                <form action="{{ route('tweet.query') }}" method="GET">
+                <form action="{{ route('tweet.getAll') }}" method="GET">
                     <p>
                         <input type="text" name="searchQuery" value="" placeholder="検索">
                         <input type="submit" value="検索">
@@ -20,7 +22,7 @@
                     </p>
                 </form>
             </div>
-            @foreach ($allTweets as $tweet)
+            @foreach ($tweets as $tweet)
                 <div class='col-md-8 mb-3'>
                     <div class='card'>
                         <div class="card-haeder p-3 w-100 d-flex">
@@ -55,7 +57,7 @@
                 </div>
             @endforeach
             {{-- ツイート一覧のページネーション --}}
-            {{ $allTweets->links() }}
+            {{ $tweets->links() }}
         </div>
     </div>
 
